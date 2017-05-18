@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": "yadmin",
+    "password": "test101",
+    "host": "127.0.0.1",
+    "database": "yappo-dev",
+    "schema": "schema"
+  }
+}
