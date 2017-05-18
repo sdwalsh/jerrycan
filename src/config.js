@@ -4,6 +4,9 @@
 * License (MIT)
 */
 
+exports.GOOGLE_CONSUMER_KEY = process.env.GOOGLE_CONSUMER_KEY
+exports.GOOGLE_CONSUMER_SECRET = process.env.GOOGLE_CONSUMER_SECRET
+
 // Ensure require('dotenv').config() is run before this module is required
 exports.NODE_ENV = process.env.NODE_ENV || 'development'
 exports.PORT = Number.parseInt(process.env.PORT, 10) || 3000
