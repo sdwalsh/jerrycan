@@ -3,6 +3,7 @@
     "bel": "^4.6.1",
     "db-migrate": "^0.10.0-beta.20",
     "db-migrate-pg": "^0.1.11",
+    "google-auth-library": "^0.10.0",
     "koa": "^2.2.0",
     "koa-better-body": "^3.0.2",
     "koa-better-router": "^2.1.1"
