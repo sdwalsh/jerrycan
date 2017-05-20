@@ -17,6 +17,7 @@ exports.setup = function(options, seedLink) {
 exports.up = function(db) {
   return db.createTable('users', {
     id: { type: 'uuid', primaryKey: true },
+    gid: 'string',
     name: 'string',
     email: 'string'
   });
