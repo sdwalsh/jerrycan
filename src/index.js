@@ -4,7 +4,6 @@ require('dotenv').config();
 // Load 3rd party libraries
 const Koa = require('koa');
 const body = require('koa-better-body');
-let router = require('loa-better-router')().loadMethods();
 
 // Use Google OAuth for authentication
 const passport = require('passport');
@@ -22,14 +21,16 @@ passport.use(new GoogleStrategy({
     callbackURL: "https://" + config.HOSTNAME + "/auth/google/callback"
   },
   function(token, tokenSecret, profile, done) {
-      db.findOrCreateUser({ googleId: profile.id }, function (err, user) {
+      db.createUser({ googleId: profile.id }, function (err, user) {
         return done(err, user);
       });
   }
 ));
 
-app.use(require('./routes').routes());
-
-app.listen(3000);
+//app.use(require('../routes').routes());
+app.use(routes.routes());
+app.start = function() {
+  app.listen(3000);
+}
 
 module.exports = app;

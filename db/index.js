@@ -4,7 +4,7 @@ const knex = require('knex')({ client: 'pg' });
 const {sql, _raw} = require('pg-extra');
 const debug = require('debug')('app:db:index');
 
-const {pool} = require('./util');
+const {pool} = require('./utility');
 
 // SQL query functions.  When this becomes busy factor out into seperate files and export
 
