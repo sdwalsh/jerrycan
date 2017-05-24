@@ -37,7 +37,12 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return db.dropTable('entry');
+  db.removeForeignKey('entry', 'gid', 
+  {
+    dropIndex: true,
+  }, callback);
+  db.dropTable('entry');
+  return db;
 };
 
 exports._meta = {
