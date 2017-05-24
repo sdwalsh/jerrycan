@@ -20,3 +20,18 @@ exports.createUser = async function (gid, name, email) {
     RETURNING *
     `)
 }
+
+exports.createLog = async function (miles, gallons, price, date, receipt, location) {
+    // assert miles is integer
+    // assert gallons is double
+    // assert price is money
+    // assert date is timestamp
+    // assert receipt is a valid url
+    // assert location is a string
+
+    return pool.one(sql`
+    INSERT INTO entry (miles, gallons, price, date, receipt, location)
+    VALUES (${miles}, ${gallons}, ${price}, ${date}, ${receipt}, ${location})
+    RETURNING *
+    `)
+}
