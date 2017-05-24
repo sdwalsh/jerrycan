@@ -166,6 +166,10 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+crc@^3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/crc/-/crc-3.4.4.tgz#9da1e980e3bd44fc5c93bf5ab3da3378d85e466b"
+
 cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
@@ -655,6 +659,23 @@ koa-router@^7.2.0:
     methods "^1.0.1"
     path-to-regexp "^1.1.1"
 
+koa-session-redis@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/koa-session-redis/-/koa-session-redis-1.1.0.tgz#c3708a0510c18f6a7fe26507760e2ce4dce6bb3a"
+  dependencies:
+    debug "*"
+    redis "~0.10.1"
+    thunkify "~2.1.1"
+    uid2 "0.0.3"
+
+koa-session@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/koa-session/-/koa-session-5.0.0.tgz#7f1f9392df6c8a792901ecfbfaa1f88a084c6d2a"
+  dependencies:
+    crc "^3.4.4"
+    debug "^2.2.0"
+    uid-safe "^2.1.3"
+
 koa@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/koa/-/koa-2.2.0.tgz#b055933187849d540ad8b9f731baaa4be97c652d"
@@ -1062,6 +1083,10 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
+random-bytes@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/random-bytes/-/random-bytes-1.0.0.tgz#4f68a1dc0ae58bd3fb95848c30324db75d64360b"
+
 randomatic@^1.1.3:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-1.1.6.tgz#110dcabff397e9dcff7c0789ccc0a49adf1ec5bb"
@@ -1109,6 +1134,10 @@ rechoir@^0.6.2:
   resolved "https://registry.yarnpkg.com/rechoir/-/rechoir-0.6.2.tgz#85204b54dba82d5742e28c96756ef43af50e3384"
   dependencies:
     resolve "^1.1.6"
+
+redis@~0.10.1:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/redis/-/redis-0.10.3.tgz#8927fe2110ee39617bcf3fd37b89d8e123911bb6"
 
 regenerator-runtime@^0.10.0:
   version "0.10.5"
@@ -1247,6 +1276,10 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
+thunkify@~2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/thunkify/-/thunkify-2.1.2.tgz#faa0e9d230c51acc95ca13a361ac05ca7e04553d"
+
 tildify@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/tildify/-/tildify-1.0.0.tgz#2a021db5e8fbde0a8f8b4df37adaa8fb1d39d7dd"
@@ -1274,7 +1307,13 @@ type-is@^1.5.5:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-uid2@0.0.x:
+uid-safe@^2.1.3:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/uid-safe/-/uid-safe-2.1.4.tgz#3ad6f38368c6d4c8c75ec17623fb79aa1d071d81"
+  dependencies:
+    random-bytes "~1.0.0"
+
+uid2@0.0.3, uid2@0.0.x:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/uid2/-/uid2-0.0.3.tgz#483126e11774df2f71b8b639dcd799c376162b82"
 

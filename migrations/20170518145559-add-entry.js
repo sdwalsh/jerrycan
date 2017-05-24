@@ -25,15 +25,15 @@ exports.up = function(db) {
     receipt: 'string',
     location: 'string'
   });
-  
-  db.addForeignKey('entry', 'users', 'gid', 
+
+  db.addForeignKey('entry', 'users', 'uid', 
   {
-    'gid': 'gid'
+    'uid': 'id'
   },
   {
     onDelete: 'CASCADE',
     onUpdate: 'RESTRICT'
-  }, callback);
+  });
   return db;
 };
 
@@ -41,7 +41,7 @@ exports.down = function(db) {
   db.removeForeignKey('entry', 'gid', 
   {
     dropIndex: true,
-  }, callback);
+  });
   db.dropTable('entry');
   return db;
 };
