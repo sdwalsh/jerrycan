@@ -21,6 +21,16 @@ exports.createUser = async function (gid, name, email) {
     `)
 }
 
+// Find a user given a google id
+exports.findUser = async function (gid) {
+    // assert gid is valid
+    const string = knex('users')
+        .where({gid: gid})
+        .returning('*')
+        .toString();
+    return pool.one(_raw`${string}`)
+}
+
 exports.createLog = async function (miles, gallons, price, date, receipt, location) {
     // assert miles is integer
     // assert gallons is double
