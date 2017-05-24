@@ -15,8 +15,9 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('entry', {
+  db.createTable('entry', {
     id: { type: 'int', primaryKey: true },
+    gid: 'string',
     miles: 'numeric',
     gallons: 'numeric',
     price: 'money',
@@ -24,6 +25,15 @@ exports.up = function(db) {
     receipt: 'string',
     location: 'string'
   });
+  db.addForeignKey('entry', 'users', 'gid', 
+  {
+    'gid': 'gid'
+  },
+  {
+    onDelete: 'CASCADE',
+    onUpdate: 'RESTRICT'
+  }, callback);
+  return db;
 };
 
 exports.down = function(db) {

@@ -18,7 +18,7 @@ exports.createUser = async function (gid, name, email) {
     INSERT INTO users (gid, name, email)
     VALUES (${gid}, ${name}, ${email})
     RETURNING *
-    `)
+    `);
 }
 
 // Find a user given a google id
@@ -28,10 +28,10 @@ exports.findUser = async function (gid) {
         .where({gid: gid})
         .returning('*')
         .toString();
-    return pool.one(_raw`${string}`)
+    return pool.one(_raw`${string}`);
 }
 
-exports.createLog = async function (miles, gallons, price, date, receipt, location) {
+exports.createEntry = async function (miles, gallons, price, date, receipt, location) {
     // assert miles is integer
     // assert gallons is double
     // assert price is money
@@ -43,5 +43,5 @@ exports.createLog = async function (miles, gallons, price, date, receipt, locati
     INSERT INTO entry (miles, gallons, price, date, receipt, location)
     VALUES (${miles}, ${gallons}, ${price}, ${date}, ${receipt}, ${location})
     RETURNING *
-    `)
+    `);
 }
