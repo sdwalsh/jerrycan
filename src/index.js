@@ -9,7 +9,7 @@ const body = require('koa-better-body');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
 
-const db = require('../db');
+const db = require('./db');
 const routes = require('./routes');
 const config = require('./config');
 

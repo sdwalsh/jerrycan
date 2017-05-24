@@ -25,6 +25,7 @@ exports.up = function(db) {
     receipt: 'string',
     location: 'string'
   });
+  
   db.addForeignKey('entry', 'users', 'gid', 
   {
     'gid': 'gid'
