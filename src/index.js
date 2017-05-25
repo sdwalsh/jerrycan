@@ -11,7 +11,7 @@ const session = require('koa-session-redis');
 
 // Use Google OAuth for authentication
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const db = require('./db');
 const routes = require('./routes');
@@ -20,6 +20,7 @@ const config = require('./config');
 const app = new Koa();
 
 // Session configuration using Redis
+// Sessions will remain for 60 minutes - 3600 seconds
 app.use(session({
     store: {
       host: config.REDIS || '127.0.0.1',
@@ -34,10 +35,9 @@ passport.use(new GoogleStrategy({
     consumerSecret: config.GOOGLE_CONSUMER_SECRET,
     callbackURL: "https://" + config.HOSTNAME + "/auth/google/callback"
   },
-  function(token, tokenSecret, profile, done) {
-      db.createUser({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
+  async function(token, tokenSecret, profile, done) {
+      user = await db.createUser(profile.id, profile.name, profile.emails);
+      return done(err, user);
   }
 ));
 
