@@ -4,10 +4,8 @@ require('dotenv').config();
 // Load 3rd party libraries
 const Koa = require('koa');
 const body = require('koa-better-body');
-
-// Session
-const session = require('koa-session-redis');
-// app.keys = ['keys here'];
+const jwt = require('koa-jwt');
+const unless = require('koa-unless');
 
 // Use Google OAuth for authentication
 const passport = require('passport');
@@ -19,16 +17,20 @@ const config = require('./config');
 
 const app = new Koa();
 
-// Session configuration using Redis
-// Sessions will remain for 60 minutes - 3600 seconds
-app.use(session({
-    store: {
-      host: config.REDIS || '127.0.0.1',
-      port: config.REDIS_PORT || '6379',
-      ttl: 3600,
-    },
-  },
-));
+// Custom 401 handling if you don't want to expose koa-jwt errors to users
+app.use(function(ctx, next){
+  return next().catch((err) => {
+    if (401 == err.status) {
+      ctx.status = 401;
+      ctx.body = 'Protected resource, use Authorization header to get access\n';
+    } else {
+      throw err;
+    }
+  });
+});
+
+// require jwt unless the path is public
+app.use(jwt({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/] }));
 
 passport.use(new GoogleStrategy({
     consumerKey: config.GOOGLE_CONSUMER_KEY,

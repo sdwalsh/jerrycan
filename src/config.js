@@ -6,6 +6,7 @@
 
 exports.GOOGLE_CONSUMER_KEY = process.env.GOOGLE_CONSUMER_KEY
 exports.GOOGLE_CONSUMER_SECRET = process.env.GOOGLE_CONSUMER_SECRET
+exports.JWT_SECRET = process.env.JWT_SECRET
 
 // Ensure require('dotenv').config() is run before this module is required
 exports.NODE_ENV = process.env.NODE_ENV || 'development'
