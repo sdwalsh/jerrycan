@@ -5,12 +5,17 @@ require('dotenv').config();
 const Koa = require('koa');
 const body = require('koa-better-body');
 const jwt = require('koa-jwt');
+const jsonwt = require('jsonwebtoken');
 const unless = require('koa-unless');
 
+const Router = require('koa-router');
+const router = new Router();
+
 // Use Google OAuth for authentication
-const passport = require('passport');
+const passport = require('koa-passport');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
+// Local imports
 const db = require('./db');
 const routes = require('./routes');
 const config = require('./config');
@@ -33,15 +38,29 @@ app.use(function(ctx, next){
 app.use(jwt({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/] }));
 
 passport.use(new GoogleStrategy({
-    consumerKey: config.GOOGLE_CONSUMER_KEY,
-    consumerSecret: config.GOOGLE_CONSUMER_SECRET,
+    clientID: config.GOOGLE_CONSUMER_KEY,
+    clientSecret: config.GOOGLE_CONSUMER_SECRET,
     callbackURL: "https://" + config.HOSTNAME + "/auth/google/callback"
   },
   async function(token, tokenSecret, profile, done) {
       user = await db.createUser(profile.id, profile.name, profile.emails);
+      jsonwt.sign({id: profile.id})
       return done(err, user);
   }
 ));
+
+router.get('/auth/google',
+  passport.authenticate('google', 
+  { scope: ['https://www.googleapis.com/auth/plus.login'] })
+);
+
+router.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  async (ctx) => {
+    ctx.body = {
+      token: jwt.sign()
+    }
+});
 
 //app.use(require('../routes').routes());
 app.use(routes.routes());
