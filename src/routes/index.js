@@ -4,6 +4,7 @@ const json = require('koa-json');
 const assert = require('better-assert');
 const Router = require('koa-router');
 const router = new Router();
+const jsonwt = require('jsonwebtoken');
 
 // Local imports
 const config = require('../config');
@@ -19,8 +20,23 @@ router.get('/', async (ctx) => {
 */
 
 // Test function for use during development
-router.get('/', async (ctx) => {
-    ctx.assert(config.NODE_ENV === 'development', 404)
+router.get('/public', async (ctx) => {
+    ctx.assert(config.NODE_ENV === 'development', 404);
+    ctx.cookies.set = ('Test', 'Test');
+    ctx.body = { test: "text" };
+});
+
+router.get('public/test', async (ctx) => {
+    ctx.assert(config.NODE_ENV === 'development', 404);
+    await ctx.set({
+      'Authorization': 'Bearer ' + jsonwt.sign('test', 'filler')
+    })
+    ctx.body = 'box';
+});
+
+router.get('/public', async (ctx) => {
+    ctx.assert(config.NODE_ENV === 'development', 404);
+    ctx.cookies.set = ('Test', 'Test');
     ctx.body = { test: "text" };
 });
 

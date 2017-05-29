@@ -9,7 +9,7 @@ const jsonwt = require('jsonwebtoken');
 const unless = require('koa-unless');
 
 const Router = require('koa-router');
-const router = new Router();
+const auth = new Router();
 
 // Use Google OAuth for authentication
 const passport = require('koa-passport');
@@ -22,8 +22,33 @@ const config = require('./config');
 
 const app = new Koa();
 
+// require jwt unless the path is public
+//app.use(jwt({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/] }));
+
+passport.use(new GoogleStrategy({
+    clientID: config.GOOGLE_CONSUMER_KEY,
+    clientSecret: config.GOOGLE_CONSUMER_SECRET,
+    callbackURL: "http://" + config.HOSTNAME + "/auth/google/callback"
+  },
+  async function(token, tokenSecret, profile, done) {
+      //user = await db.createUser(profile.id, profile.name, profile.emails);
+      return done(err, user);
+  }
+));
+
+auth.get('/auth/google',
+  passport.authenticate('google', 
+  { scope: ['https://www.googleapis.com/auth/plus.login'] })
+);
+
+auth.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  async (ctx) => {
+    await ctx.set({'Authorization': 'Bearer ' + jsonwt.sign(ctx.state.user.id, 'secret')})
+});
+
 // Custom 401 handling if you don't want to expose koa-jwt errors to users
-app.use(function(ctx, next){
+/*app.use(function(ctx, next){
   return next().catch((err) => {
     if (401 == err.status) {
       ctx.status = 401;
@@ -32,37 +57,10 @@ app.use(function(ctx, next){
       throw err;
     }
   });
-});
-
-// require jwt unless the path is public
-app.use(jwt({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/] }));
-
-passport.use(new GoogleStrategy({
-    clientID: config.GOOGLE_CONSUMER_KEY,
-    clientSecret: config.GOOGLE_CONSUMER_SECRET,
-    callbackURL: "https://" + config.HOSTNAME + "/auth/google/callback"
-  },
-  async function(token, tokenSecret, profile, done) {
-      user = await db.createUser(profile.id, profile.name, profile.emails);
-      jsonwt.sign({id: profile.id})
-      return done(err, user);
-  }
-));
-
-router.get('/auth/google',
-  passport.authenticate('google', 
-  { scope: ['https://www.googleapis.com/auth/plus.login'] })
-);
-
-router.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  async (ctx) => {
-    ctx.body = {
-      token: jwt.sign()
-    }
-});
+});*/
 
 //app.use(require('../routes').routes());
+app.use(auth.routes());
 app.use(routes.routes());
 app.start = function() {
   app.listen(3000);
