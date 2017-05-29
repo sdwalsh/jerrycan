@@ -9,9 +9,11 @@ exports.up = function(knex, Promise) {
             table.integer('miles');
             table.decimal('gallons');
             table.specificType('price', 'MONEY');
+            table.specificType('total', 'MONEY');
             table.text('receipt');
             table.text('location');
             table.date('date').defaultTo(knex.raw(current_date));
+            table.text('notes');
         });
     });
 };
