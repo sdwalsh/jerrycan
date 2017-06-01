@@ -34,7 +34,7 @@ exports.findUser = async function (gid) {
 exports.createCar = async function (user, type, model, year) {
     return pool.one(sql`
     INSERT INTO cars (user, type, model, year)
-    VALUES ((SELECT uuid FROM users WHERE uuid = user), type, model, year)
+    VALUES ((SELECT uuid FROM users WHERE uuid = ${user}), ${type}, ${model}, ${year})
     `)
 }
 
