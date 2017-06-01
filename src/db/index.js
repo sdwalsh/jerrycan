@@ -14,11 +14,11 @@ exports.createUser = async function (gid, name, email) {
     // assert gid is valid
     // assert name is valid
     // assert email is valid
-    return pool.one(sql`
-    INSERT INTO users (gid, name, email)
-    VALUES (${gid}, ${name}, ${email})
-    RETURNING *
-    `);
+    const string = knex('users')
+        .insert({gid: gid}, {name: name}, {email: email})
+        .returning('uuid')
+        .toString();
+    return pool.one(_raw`${string}`);
 }
 
 // Find a user given a google id
@@ -29,6 +29,13 @@ exports.findUser = async function (gid) {
         .returning('*')
         .toString();
     return pool.one(_raw`${string}`);
+}
+
+exports.createCar = async function (user, type, model, year) {
+    return pool.one(sql`
+    INSERT INTO cars (user, type, model, year)
+    VALUES ((SELECT uuid FROM users WHERE uuid = user), type, model, year)
+    `)
 }
 
 exports.createEntry = async function (miles, gallons, price, date, receipt, location) {
