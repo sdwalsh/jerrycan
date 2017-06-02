@@ -38,30 +38,6 @@ exports.findUserU = async function (uuid) {
     return pool.one(_raw`${string}`);
 }
 
-exports.createCar = async function (user, type, model, year) {
-    return pool.one(sql`
-    INSERT INTO cars (user, type, model, year)
-    VALUES ((SELECT uuid FROM users WHERE uuid = ${user}), ${type}, ${model}, ${year})
-    RETURNING uuid
-    `)
-}
-
-exports.findCarsByUser = async function (user) {
-    const string = knex('cars')
-        .where({user_uuid: user})
-        .returning('*')
-        .toString();
-    return pool.many(_raw`${string}`);
-}
-
-exports.findCar = async function (uuid) {
-    const string = knex('cars')
-        .where({uuid: uuid})
-        .returning('*')
-        .toString();
-    return pool.one(_raw`${string}`);
-}
-
 exports.createEntry = async function (miles, gallons, price, date, receipt, location) {
     // assert miles is integer
     // assert gallons is double
