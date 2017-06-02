@@ -21,11 +21,18 @@ exports.createUser = async function (gid, name, email) {
     return pool.one(_raw`${string}`);
 }
 
-// Find a user given a google id
-exports.findUser = async function (gid) {
+exports.findUserG = async function (gid) {
     // assert gid is valid
     const string = knex('users')
         .where({gid: gid})
+        .returning('*')
+        .toString();
+    return pool.one(_raw`${string}`);
+}
+
+exports.findUserU = async function (uuid) {
+    const string = knex('users')
+        .where({uuid: uuid})
         .returning('*')
         .toString();
     return pool.one(_raw`${string}`);
@@ -35,7 +42,24 @@ exports.createCar = async function (user, type, model, year) {
     return pool.one(sql`
     INSERT INTO cars (user, type, model, year)
     VALUES ((SELECT uuid FROM users WHERE uuid = ${user}), ${type}, ${model}, ${year})
+    RETURNING uuid
     `)
+}
+
+exports.findCarsByUser = async function (user) {
+    const string = knex('cars')
+        .where({user_uuid: user})
+        .returning('*')
+        .toString();
+    return pool.many(_raw`${string}`);
+}
+
+exports.findCar = async function (uuid) {
+    const string = knex('cars')
+        .where({uuid: uuid})
+        .returning('*')
+        .toString();
+    return pool.one(_raw`${string}`);
 }
 
 exports.createEntry = async function (miles, gallons, price, date, receipt, location) {
@@ -49,6 +73,6 @@ exports.createEntry = async function (miles, gallons, price, date, receipt, loca
     return pool.one(sql`
     INSERT INTO entry (miles, gallons, price, date, receipt, location)
     VALUES (${miles}, ${gallons}, ${price}, ${date}, ${receipt}, ${location})
-    RETURNING *
+    RETURNING uuid
     `);
 }
