@@ -6,6 +6,10 @@ const debug = require('debug')('app:db:index');
 
 const {pool} = require('./utility');
 
+// Export sub modules
+exports.cars = require('./cars');
+exports.logs = require('./logs');
+
 // SQL query functions.  When this becomes busy factor out into seperate files and export
 
 // Create user with a GoogleID
@@ -36,19 +40,4 @@ exports.findUserU = async function (uuid) {
         .returning('*')
         .toString();
     return pool.one(_raw`${string}`);
-}
-
-exports.createEntry = async function (miles, gallons, price, date, receipt, location) {
-    // assert miles is integer
-    // assert gallons is double
-    // assert price is money
-    // assert date is timestamp
-    // assert receipt is a valid url
-    // assert location is a string
-
-    return pool.one(sql`
-    INSERT INTO entry (miles, gallons, price, date, receipt, location)
-    VALUES (${miles}, ${gallons}, ${price}, ${date}, ${receipt}, ${location})
-    RETURNING uuid
-    `);
 }

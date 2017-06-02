@@ -3,7 +3,7 @@ const {sql} = require('pg-extra')
 
 exports.createCar = async function (user, type, model, year) {
     return pool.one(sql`
-    INSERT INTO cars (user, type, model, year)
+    INSERT INTO cars (user_uuid, type, model, year)
     VALUES ((SELECT uuid FROM users WHERE uuid = ${user}), ${type}, ${model}, ${year})
     RETURNING uuid
     `);
