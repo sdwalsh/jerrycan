@@ -31,10 +31,15 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://" + config.HOSTNAME + "/auth/google/callback"
   },
   async function(token, tokenSecret, profile, done) {
-      //user = await db.createUser(profile.id, profile.name, profile.emails);
+    user = await db.findUserG(profile.id)
+    if (user.uuid !== 'undefined') {
       return done(err, user);
-  }
-));
+    } 
+    else {
+      user = await db.createUser(profile.id, profile.name, profile.emails);
+      return done(err, user);
+    }
+}));
 
 auth.get('/auth/google',
   passport.authenticate('google', 
@@ -44,7 +49,7 @@ auth.get('/auth/google',
 auth.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   async (ctx) => {
-    await ctx.set({'Authorization': 'Bearer ' + jsonwt.sign(ctx.state.user.id, 'secret')})
+    await ctx.set({'Authorization': 'Bearer ' + jsonwt.sign(ctx.state.user.uuid, 'secret')})
 });
 
 // Custom 401 handling if you don't want to expose koa-jwt errors to users

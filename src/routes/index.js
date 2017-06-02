@@ -8,6 +8,7 @@ const jsonwt = require('jsonwebtoken');
 
 // Local imports
 const config = require('../config');
+const db = require('../db')
 
 /*
 router.get('/', async (ctx) => {
@@ -26,7 +27,7 @@ router.get('/public', async (ctx) => {
     ctx.body = { test: "text" };
 });
 
-router.get('public/test', async (ctx) => {
+router.get('/public/test', async (ctx) => {
     ctx.assert(config.NODE_ENV === 'development', 404);
     await ctx.set({
       'Authorization': 'Bearer ' + jsonwt.sign('test', 'filler')

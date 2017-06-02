@@ -6,11 +6,10 @@ const debug = require('debug')('app:db:index');
 
 const {pool} = require('./utility');
 
+// Database strategy based on koa-skeleton by @danneu
 // Export sub modules
 exports.cars = require('./cars');
 exports.logs = require('./logs');
-
-// SQL query functions.  When this becomes busy factor out into seperate files and export
 
 // Create user with a GoogleID
 // Don't store the auth tokens in the users table
@@ -25,6 +24,7 @@ exports.createUser = async function (gid, name, email) {
     return pool.one(_raw`${string}`);
 }
 
+// Only used during passportjs login
 exports.findUserG = async function (gid) {
     // assert gid is valid
     const string = knex('users')
@@ -34,6 +34,7 @@ exports.findUserG = async function (gid) {
     return pool.one(_raw`${string}`);
 }
 
+// Traditional search for a user.  Uuid is stored in JWT
 exports.findUserU = async function (uuid) {
     const string = knex('users')
         .where({uuid: uuid})
