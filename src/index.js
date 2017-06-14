@@ -30,9 +30,6 @@ if(config.NODE_ENV === "development"){
 
 app.use(passport.initialize());
 
-// require jwt unless the path is public
-//app.use(jwt({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/] }));
-
 passport.use(new GoogleStrategy({
     clientID: config.GOOGLE_CONSUMER_KEY,
     clientSecret: config.GOOGLE_CONSUMER_SECRET,
@@ -66,9 +63,8 @@ auth.get('/auth/google/callback',
   async (ctx) => {
     await ctx.state.user.then(
       async function(user){
-        await ctx.cookies.set("authorization", jsonwt.sign(user.uuid, 'secret'));
+        await ctx.cookies.set("authorization", jsonwt.sign(user.uuid, config.JWT_SECRET));
         ctx.response.status = 200;
-        //await ctx.set({'Authorization': 'Bearer ' + jsonwt.sign(user.uuid, 'secret')}) 
       }
     )
     .catch(
@@ -78,20 +74,14 @@ auth.get('/auth/google/callback',
     )
 });
 
-// Custom 401 handling if you don't want to expose koa-jwt errors to users
-/*app.use(function(ctx, next){
-  return next().catch((err) => {
-    if (401 == err.status) {
-      ctx.status = 401;
-      ctx.body = 'Protected resource, use Authorization header to get access\n';
-    } else {
-      throw err;
-    }
-  });
-});*/
-
-//app.use(require('../routes').routes());
+//app.use(home.routes());
 app.use(auth.routes());
+
+// require jwt unless the path is public
+app.use(jwt({ 
+  secret: config.JWT_SECRET,
+  cookie: 'authorization'
+}).unless({ path: [/^\/auth/] }));
 app.use(routes.routes());
 app.start = function() {
   app.listen(3000);
