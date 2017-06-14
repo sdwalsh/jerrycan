@@ -1,5 +1,10 @@
+const assert = require('better-assert');
+const uuid = require('uuid');
+const knex = require('knex')({client: 'pg'});
+const {sql, _raw} = require('pg-extra');
+const debug = require('debug')('app:db:index');
+
 const {pool} = require('./utility');
-const {sql} = require('pg-extra');
 
 exports.createCar = async function(user, type, model, year) {
     return pool.one(sql`

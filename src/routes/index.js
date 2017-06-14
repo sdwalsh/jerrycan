@@ -20,6 +20,40 @@ router.get('/', async (ctx) => {
 })
 */
 
+router.get('/cars', async(ctx) => {
+  user = ctx.state.user;
+  ctx.assert(user, 401);
+  cars = await db.cars.findCarsByUser(user);
+  ctx.body = cars;
+});
+
+router.post('/cars', async(ctx) => {
+  ctx.validateBody('type')
+    .required('type required')
+    .isString()
+    .trim();
+  ctx.validateBody('model')
+    .required('model required')
+    .isString()
+    .trim();
+  ctx.validateBody('year')
+    .required('year required')
+    .isString()
+    .trim();
+  user = ctx.state.user;
+  ctx.assert(user, 401);
+
+  const car = await db.cars.createCar(
+    user, ctx.vals.type, ctx.vals.model, ctx.vals.year
+  );
+
+  if (car) {
+    ctx.body = car;
+  } else {
+    ctx.response.status = 400;
+  }
+});
+
 // Test function for use during development
 router.get('/public', async(ctx) => {
     ctx.assert(config.NODE_ENV === 'development', 404);

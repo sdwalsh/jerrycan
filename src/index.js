@@ -3,11 +3,12 @@ require('dotenv').config();
 
 // Load 3rd party libraries
 const Koa = require('koa');
-const body = require('koa-better-body');
+const body = require('koa-body');
 const jwt = require('koa-jwt');
 const jsonwt = require('jsonwebtoken');
 const unless = require('koa-unless');
 const logger = require('koa-logger');
+const bouncer = require('koa-bouncer');
 
 const Router = require('koa-router');
 const auth = new Router();
@@ -29,6 +30,8 @@ if (config.NODE_ENV === 'development') {
 }
 
 app.use(passport.initialize());
+app.use(body());
+app.use(bouncer.middleware());
 
 passport.use(new GoogleStrategy({
     clientID: config.GOOGLE_CONSUMER_KEY,
