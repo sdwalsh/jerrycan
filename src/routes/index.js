@@ -8,7 +8,7 @@ const jsonwt = require('jsonwebtoken');
 
 // Local imports
 const config = require('../config');
-const db = require('../db')
+const db = require('../db');
 
 /*
 router.get('/', async (ctx) => {
@@ -21,41 +21,41 @@ router.get('/', async (ctx) => {
 */
 
 // Test function for use during development
-router.get('/public', async (ctx) => {
+router.get('/public', async(ctx) => {
     ctx.assert(config.NODE_ENV === 'development', 404);
     ctx.cookies.set = ('Test', 'Test');
-    ctx.body = { test: "text" };
+    ctx.body = {test: 'text'};
 });
 
-router.get('/public/test', async (ctx) => {
+router.get('/public/test', async(ctx) => {
     ctx.assert(config.NODE_ENV === 'development', 404);
     await ctx.set({
-      'Authorization': 'Bearer ' + jsonwt.sign('test', 'filler')
+      'Authorization': 'Bearer ' + jsonwt.sign('test', 'filler'),
     });
     ctx.body = 'box';
 });
 
-router.get('/public', async (ctx) => {
+router.get('/public', async(ctx) => {
     ctx.assert(config.NODE_ENV === 'development', 404);
     ctx.cookies.set = ('Test', 'Test');
-    ctx.body = { test: "text" };
+    ctx.body = {test: 'text'};
 });
 
 // Assert authenticated with google before reaching these routes
 
 // List all cars
-//router.get('/cars');
+// router.get('/cars');
 
 // Add a car
-//router.post('/cars);
+// router.post('/cars);
 
 // List logs for a car
-//router.get('/cars/:car_id');
+// router.get('/cars/:car_id');
 
 // Add a log
-//router.post('/cars/:car_id/);
+// router.post('/cars/:car_id/);
 
 // Detailed information about a log
-//router.get('/cars/:car_id/)
+// router.get('/cars/:car_id/)
 
 module.exports = router;

@@ -1,1 +1,1 @@
-require('./src').start()
+require('./src').start();
