@@ -1,4 +1,4 @@
-const {extend, parseUrl} = require('pg-extra')
+const {extend, sql, _raw, parseUrl} = require('pg-extra')
 const pg = extend(require('pg'))
 
 const config = require('../config')

@@ -12,6 +12,7 @@
     "koa-better-body": "^3.0.2",
     "koa-json": "^2.0.2",
     "koa-jwt": "^3.2.2",
+    "koa-logger": "^3.0.0",
     "koa-passport": "^3.0.0",
     "koa-router": "^7.2.0",
     "koa-session": "^5.0.0",

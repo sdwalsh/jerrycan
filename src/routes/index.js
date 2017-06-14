@@ -31,7 +31,7 @@ router.get('/public/test', async (ctx) => {
     ctx.assert(config.NODE_ENV === 'development', 404);
     await ctx.set({
       'Authorization': 'Bearer ' + jsonwt.sign('test', 'filler')
-    })
+    });
     ctx.body = 'box';
 });
 
