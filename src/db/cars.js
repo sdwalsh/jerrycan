@@ -47,6 +47,7 @@ exports.deleteCar = async function(uuid) {
     const string = knex('cars')
         .where({uuid: uuid})
         .del()
+        .returning('*')
         .toString();
     return pool.one(_raw`${string}`);
 };
