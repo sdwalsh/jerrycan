@@ -1,6 +1,14 @@
 const {pool} = require('./utility');
 const {sql} = require('pg-extra');
 
+exports.findLogsByCar = async function(carUuid) {
+    const string = knex('logs')
+        .where({car_uuid: uuid})
+        .returning('*')
+        .toString();
+    return pool.many(_raw`${string}`);
+};
+
 exports.findLog = async function(uuid) {
     const string = knex('logs')
         .where({uuid: uuid})
@@ -29,10 +37,13 @@ exports.createLog = async function(user, car, miles, gallons,
     `);
 };
 
-exports.deleteLog = async function(uuid) {
+exports.deleteLog = async function(uuid, userUuid, carUuid) {
     const string = knex('logs')
-        .where({uuid: uuid})
+        .where({uuid: uuid,
+                user_uuid: userUuid,
+                car_uuid: carUuid})
         .delete()
+        .returning('*')
         .toString();
     return pool.one(_raw`${string}`);
 };

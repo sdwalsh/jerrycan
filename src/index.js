@@ -41,6 +41,7 @@ passport.use(new GoogleStrategy({
   function(token, tokenSecret, profile, done) {
     db.findUserG(profile.id).then(
       function(user) {
+        err = null;
         return done(err, user);
       }
     )
@@ -68,7 +69,9 @@ auth.get('/auth/google/callback',
       async function(user) {
         await ctx.cookies.set(
           'authorization',
-          jsonwt.sign(user.uuid, config.JWT_SECRET)
+          jsonwt.sign(user.uuid, config.JWT_SECRET, {
+            expiresIn: 60,
+          })
         );
         ctx.response.status = 200;
       }

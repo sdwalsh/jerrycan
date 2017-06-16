@@ -15,6 +15,15 @@ exports.createCar = async function(user, type, model, year) {
     `);
 };
 
+exports.isCarOwnedByUser = async function(carUuid, userUuid) {
+    const string = knex('cars')
+        .where({uuid: carUuid,
+                user_uuid: userUuid})
+        .returning('*')
+        .toString();
+    return pool.one(_raw`${string}`);
+};
+
 exports.updateCar = async function(uuid, type, model, year) {
     const string = knex('cars')
         .where({uuid: uuid})
