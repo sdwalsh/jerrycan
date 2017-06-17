@@ -38,21 +38,15 @@ passport.use(new GoogleStrategy({
     clientSecret: config.GOOGLE_CONSUMER_SECRET,
     callbackURL: 'http://' + config.HOSTNAME + '/auth/google/callback',
   },
-  function(token, tokenSecret, profile, done) {
-    db.findUserG(profile.id).then(
-      function(user) {
-        err = null;
-        return done(err, user);
-      }
-    )
-    .catch(
-      function(user) {
-        user = db.createUser(profile.id, profile.name.givenName,
-                             profile.emails);
-        err = null;
-        return done(err, user);
-      }
-    );
+  async function(token, tokenSecret, profile, done) {
+    user = await db.findUserG(profile.id);
+    if (user) {
+      return done(null, user);
+    } else {
+      user = await db.createUser(profile.id, profile.displayName,
+                                  profile.emails);
+      return done(null, user);
+    }
 }));
 
 auth.get('/auth/google',
@@ -65,22 +59,18 @@ auth.get('/auth/google/callback',
     session: false,
   }),
   async(ctx) => {
-    await ctx.state.user.then(
-      async function(user) {
-        await ctx.cookies.set(
-          'authorization',
-          jsonwt.sign(user.uuid, config.JWT_SECRET, {
-            expiresIn: 60,
-          })
-        );
-        ctx.response.status = 200;
-      }
-    )
-    .catch(
-      function() {
-        ctx.response.status = 401;
-      }
-    );
+    user = ctx.state.user;
+    if (user) {
+      await ctx.cookies.set(
+        'authorization',
+        jsonwt.sign({
+          data: user.uuid,
+        }, config.JWT_SECRET, {expiresIn: '1hr'}
+        ));
+      ctx.response.status = 200;
+    } else {
+      ctx.response.status = 401;
+    }
 });
 
 // app.use(home.routes());
