@@ -1,49 +1,65 @@
 # JerryCan #
 
-JerryCan is a Koajs / Nodejs web application designed to track gasoline expenses over time. Migrations are handled by Knex and database access / pooling is handled by pg and pg-extra.
+JerryCan is a Koajs / Nodejs web application designed to track gasoline expenses over time.
 
-The application structure is heavily inspired by koa-skeleton by danneu on [GitHub](https://github.com/danneu/koa-skeleton) 
+This repository houses the backend of JerryCan (RESTful API)
 
-### To-do ###
+PostgreSQL > 9.6 is required with migrations and seeding handled by Knex. Database access and pooling is handled by pg and pg-extra.  Before running the application please ensure Postgres has started and the database url is set in an environmental variable.
 
-### How do I get set up? ###
+The application structure is heavily inspired by koa-skeleton by danneu on [GitHub](https://github.com/danneu/koa-skeleton)
+
+## How do I get set up? ##
 
 * Ensure PostgreSQL is installed and running
-* Configure environmental variables
-* Install packages via Yarn
+* Setup [Google OAuth2](https://developers.google.com/identity/protocols/OAuth2) and configure callback url
+* Set environmental variables (check `/src/config.js` for a list) consider using [dotenv](https://www.npmjs.com/package/dotenv)
+* Install packages via [yarn](https://yarnpkg.com/en/)
+* Initialize database with `knex migrate:latest`
+* Run `node app.js` from root directory to start JerryCan
 
-```
-#!JS
+## API Endpoints
 
-exports.GOOGLE_CONSUMER_KEY = process.env.GOOGLE_CONSUMER_KEY
-exports.GOOGLE_CONSUMER_SECRET = process.env.GOOGLE_CONSUMER_SECRET
-exports.JWT_SECRET = process.env.JWT_SECRET
+| Route                 | HTTP Verb | Type   | Explanation                                                     | Public |
+|-----------------------|:---------:|--------|-----------------------------------------------------------------|:------:|
+| /                     |    GET    | Public | general statistics used for homepage                            |   Yes  |
+| /auth/google          |    GET    | Auth   | google oauth2 authentication                                    |   Yes  |
+| /auth/google/callback |    GET    | Auth   | google oauth2 callback                                          |   Yes  |
+| /cars                 |    GET    | Cars   | return cars for the authenticated user                          |   No   |
+| /cars                 |    POST   | Cars   | creates a car for the authenticated user                        |   No   |
+| /cars/:uuid           |    PUT    | Cars   | update a car for the authenticated user                         |   No   |
+| /cars/:uuid           |    DEL    | Cars   | delete a car and any associated logs for the authenticated user |   No   |
+| /cars/:car_uuid       |    GET    | Logs   | return all logs for the car                                     |   No   |
+| /cars/:car_uuid       |    POST   | Logs   | add a log for the car                                           |   No   |
+| /cars/:car_uuid/:uuid |    DEL    | Logs   | delete a log                                                    |   No   |
 
-// Ensure require('dotenv').config() is run before this module is required
-exports.NODE_ENV = process.env.NODE_ENV || 'development'
-exports.PORT = Number.parseInt(process.env.PORT, 10)
-exports.DATABASE_URL = process.env.DATABASE_URL
+## Who do I talk to? ##
 
-exports.TRUST_PROXY = process.env.TRUST_PROXY === 'true'
+* Contact Sean @ [github.com/sdwalsh](https://www.github.com/sdwalsh) or [bitbucket.org/sdwalsh](https://www.bitbucket.org/sdwalsh)
 
-// Set the HOSTNAME in production for basic CSRF prevention
-//
-// Ex: example.com, subdomain.example.com
-exports.HOSTNAME = process.env.HOSTNAME
-if (!exports.HOSTNAME) {
-  console.warn('Warn: CSRF checks are disabled since there is no HOSTNAME environment variable provided')
-}
+## Contributing ##
 
-exports.MESSAGES_PER_PAGE = Number.parseInt(process.env.MESSAGES_PER_PAGE, 10) || 10
-exports.USERS_PER_PAGE = Number.parseInt(process.env.USERS_PER_PAGE, 10) || 10
+Feel free to fork this repository and send pull requests!
 
-// //////////////////////////////////////////////////////////
+# License #
 
-// Output config object in development to help with sanity-checking
-if (exports.NODE_ENV === 'development' || exports.NODE_ENV === 'test') {
-  console.log(exports)
-```
+MIT License
 
-### Who do I talk to? ###
+Copyright (c) 2017 Sean Walsh
 
-* Sean @ github.com/sdwalsh or bitbucket.org/sdwalsh
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
