@@ -20,6 +20,8 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // Local imports
 const db = require('./db');
 const routes = require('./routes');
+const cars = require('./routes/cars');
+const logs = require('./routes/logs');
 const config = require('./config');
 
 const app = new Koa();
@@ -82,6 +84,8 @@ app.use(jwt({
   cookie: 'authorization',
 }).unless({path: [/^\/auth/]}));
 app.use(routes.routes());
+app.use(routes.cars());
+app.use(routes.logs());
 app.start = function() {
   app.listen(3000);
 };

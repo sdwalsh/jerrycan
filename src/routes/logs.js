@@ -34,8 +34,8 @@ function loadCar() {
  * loadLogs expects ctx.state.user and ctx.vals.car_uuid both set by previous
  * middleware in order to correctly return logs, otherwise 404
  * populates ctx.vals.car_uuid.logs
- * @param {Integer} rowBegin // not implmented
- * @param {Integer} rowEnd // not implmented
+ * @param {Integer} rowBegin // not implemented
+ * @param {Integer} rowEnd // not implemented
  * @return {Void}
  */
 function loadLogs() {
