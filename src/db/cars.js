@@ -1,8 +1,8 @@
-const assert = require('better-assert');
-const uuid = require('uuid');
+// const assert = require('better-assert');
+// const uuid = require('uuid');
 const knex = require('knex')({client: 'pg'});
 const {sql, _raw} = require('pg-extra');
-const debug = require('debug')('app:db:index');
+// const debug = require('debug')('app:db:index');
 
 const {pool} = require('./utility');
 
@@ -21,6 +21,8 @@ exports.isCarOwnedByUser = async function(carUuid, userUuid) {
                 user_uuid: userUuid})
         .returning('*')
         .toString();
+    console.log(string);
+    console.log(await pool.one(_raw`${string}`));
     return pool.one(_raw`${string}`);
 };
 

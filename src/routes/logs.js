@@ -19,14 +19,9 @@ const router = new Router();
  */
 function loadCar() {
   return async(ctx, next) => {
-      ctx.validateParam('car_uuid')
-          .required('car uuid required')
-          .isUuid();
-      const car = await db.cars.isCarOwnedByUser(ctx.vals.car_uuid,
-                                            ctx.state.user);
-      assert(car, 404);
-      ctx.state.car = car;
-      await next();
+    ctx.state.cars = await db.cars.isCarOwnedByUser(ctx.vals.car_uuid,
+                                                    ctx.state.user.data);
+    await next();
   };
 }
 
@@ -40,32 +35,41 @@ function loadCar() {
  */
 function loadLogs() {
   return async(ctx, next) => {
-      const logs = await db.logs.findLogsByCar(ctx.vals.car_uuid);
-      assert(logs, 404);
-      ctx.vals.logs = logs;
-      await next();
+    ctx.vals.logs = await db.logs.findLogsByCar(ctx.vals.car_uuid);
+    await next();
   };
 }
 
 router.get('/cars/:car_uuid/', async(ctx) => {
-  user = ctx.state.user;
-  ctx.assert(user, 401);
+  ctx.validateParam('car_uuid')
+      .required('car uuid required')
+      .isUuid();
+  user = ctx.state.user.data;
+  console.log(user);
   loadCar();
+  console.log(ctx.state.car);
   loadLogs();
+  console.log(ctx.state.logs);
   ctx.body = ctx.vals.logs;
 });
 
 router.post('/cars/:car_uuid', async(ctx) => {
+  ctx.validateParam('car_uuid')
+      .required('car uuid required')
+      .isUuid();
   user = ctx.state.user;
   ctx.assert(user, 401);
   loadCar();
 });
 
 router.delete('/cars/:car_uuid/:uuid', async(ctx) => {
+  ctx.validateParam('car_uuid')
+      .required('car uuid required')
+      .isUuid();
   ctx.validateParam('uuid')
       .required('uuid of log required')
       .isUuid();
-  user = ctx.state.user;
+  user = ctx.state.user.data;
   ctx.assert(user, 404);
   loadCar();
   /**

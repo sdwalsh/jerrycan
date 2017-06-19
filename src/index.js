@@ -78,14 +78,16 @@ auth.get('/auth/google/callback',
 // app.use(home.routes());
 app.use(auth.routes());
 
-// require jwt unless the path is public
+// require jwt unless the path is auth
 app.use(jwt({
   secret: config.JWT_SECRET,
   cookie: 'authorization',
 }).unless({path: [/^\/auth/]}));
+
 app.use(routes.routes());
-app.use(routes.cars());
-app.use(routes.logs());
+app.use(cars.routes());
+app.use(logs.routes());
+
 app.start = function() {
   app.listen(3000);
 };

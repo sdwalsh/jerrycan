@@ -12,8 +12,9 @@ const db = require('../db');
 const router = new Router();
 
 router.get('/cars', async(ctx) => {
-  user = ctx.state.user;
+  user = ctx.state.user.data;
   ctx.assert(user, 401);
+  console.log(user);
   cars = await db.cars.findCarsByUser(user);
   ctx.body = cars;
 });
@@ -22,7 +23,7 @@ router.delete('/cars/:uuid', async(ctx) => {
   ctx.validateParam('uuid')
     .required('uuid of car required')
     .isUuid();
-  user = ctx.state.user;
+  user = ctx.state.user.data;
   ctx.assert(user, 401);
 
   const car = await db.cars.deleteCar(ctx.vals.uuid);
@@ -50,7 +51,7 @@ router.put('/cars/:uuid', async(ctx) => {
     .required('year required')
     .isString()
     .trim();
-  user = ctx.state.user;
+  user = ctx.state.user.data;
   ctx.assert(user, 401);
 
   const car = await db.cars.updateCar(
@@ -77,7 +78,7 @@ router.post('/cars', async(ctx) => {
     .required('year required')
     .isString()
     .trim();
-  user = ctx.state.user;
+  user = ctx.state.user.data;
   ctx.assert(user, 401);
 
   const car = await db.cars.createCar(
