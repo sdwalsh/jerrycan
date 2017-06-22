@@ -15,7 +15,31 @@ exports.createCar = async function(user, type, model, year) {
     `);
 };
 
-exports.isCarOwnedByUser = async function(carUuid, userUuid) {
+exports.findCarsByUser = async function(user) {
+    const string = knex('cars')
+        .where({user_uuid: user})
+        .returning('*')
+        .toString();
+    return pool.many(_raw`${string}`);
+};
+
+exports.findCar = async function(uuid) {
+    const string = knex('cars')
+        .where({uuid: uuid})
+        .returning('*')
+        .toString();
+    return pool.one(_raw`${string}`);
+};
+
+exports.carsOwnedByUser = async function(userUuid) {
+    const string = knex('cars')
+        .where({user_uuid: userUuid})
+        .returning('uuid')
+        .toString();
+    return pool.many(_raw`${string}`);
+};
+
+exports.findCarOwnedByUser = async function(carUuid, userUuid) {
     const string = knex('cars')
         .where({uuid: carUuid,
                 user_uuid: userUuid})
@@ -34,22 +58,6 @@ exports.updateCar = async function(uuid, type, model, year) {
             model: model,
             year: year,
         })
-        .toString();
-    return pool.one(_raw`${string}`);
-};
-
-exports.findCarsByUser = async function(user) {
-    const string = knex('cars')
-        .where({user_uuid: user})
-        .returning('*')
-        .toString();
-    return pool.many(_raw`${string}`);
-};
-
-exports.findCar = async function(uuid) {
-    const string = knex('cars')
-        .where({uuid: uuid})
-        .returning('*')
         .toString();
     return pool.one(_raw`${string}`);
 };

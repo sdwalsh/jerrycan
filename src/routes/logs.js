@@ -1,9 +1,10 @@
 // Main router file
 // Third party imports
-const json = require('koa-json');
-const assert = require('better-assert');
+// const json = require('koa-json');
+// const assert = require('better-assert');
 const Router = require('koa-router');
-const jsonwt = require('jsonwebtoken');
+// const jsonwt = require('jsonwebtoken');
+const winston = require('winston');
 
 // Local imports
 const config = require('../config');
@@ -19,6 +20,9 @@ const router = new Router();
  */
 function loadCar() {
   return async(ctx, next) => {
+    userOwnedCars = await db.cars.carsOwnedByUser(ctx.state.user.data);
+    winston.log(userOwnedCars);
+    ctx.assert(userOwnedCars.contains(ctx.vals.car_uuid), 404);
     ctx.state.cars = await db.cars.isCarOwnedByUser(ctx.vals.car_uuid,
                                                     ctx.state.user.data);
     await next();
