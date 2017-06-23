@@ -6,7 +6,7 @@ This repository houses the backend of JerryCan (RESTful API)
 
 PostgreSQL > 9.6 is required with migrations and seeding handled by Knex. Database access and pooling is handled by pg and pg-extra.  Before running the application please ensure Postgres has started and the database url is set in an environmental variable.
 
-The application structure is heavily inspired by koa-skeleton by danneu on [GitHub](https://github.com/danneu/koa-skeleton)
+The application structure is heavily inspired by koa-skeleton by danneu on [GitHub](https://github.com/danneu/koa-skeleton) and portions are modified files from koa-skeleton (under MIT license and details in credit section)
 
 ## How do I get set up? ##
 
@@ -39,6 +39,24 @@ The application structure is heavily inspired by koa-skeleton by danneu on [GitH
 ## Contributing ##
 
 Feel free to fork this repository and send pull requests!
+
+# Credits #
+
+This project is a modified version of [koa-skeleton](https://github.com/danneu/koa-skeleton) by danneu
+
+Portions of this project are copyrighted under MIT license by danneu
+
+Copyright (c) 2017 danneu
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 # License #
 
